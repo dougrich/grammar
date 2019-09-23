@@ -34,22 +34,22 @@ Tests are critical. Write a test before you write a feature. Write a test after 
 # Stories
 
 As someone who authors content for the grammar:
-- I want a simple authoring language
-- I want it broken up into multiple files for legibility
-- I want it to be easy to add or remove content from
-- I want discrete fields (i.e. oneOf)
-- I want variable count of fields (i.e. someOf)
-- I want continuous fields (i.e. hue between 56 and 70)
-- I want discrete numeric fields (i.e. 2d6)
+- [ ] I want a simple authoring language
+- [ ] I want it broken up into multiple files for legibility
+- [ ] I want it to be easy to add or remove content from
+- [x] I want discrete fields (i.e. oneOf)
+- [ ] I want variable count of fields (i.e. someOf)
+- [ ] I want continuous fields (i.e. hue between 56 and 70)
+- [ ] I want discrete numeric fields (i.e. 2d6)
 
 As someone who uses the grammar to generate content:
-- I want to hit a button and get the entire tree
-- I want to hit a button and get the top level fields, then manually expand the rest of the tree
-- I want to use a 'seed' to guarantee consistent results across multiple re-builds
-- I want to re-roll a specific field (this will invalidate the seed)
-- I want to be able to download and view in a convenient format
+- [x] I want to hit a button and get the entire tree
+- [x] I want to hit a button and get the top level fields, then manually expand the rest of the tree
+- [ ] I want to use a 'seed' to guarantee consistent results across multiple re-builds
+- [x] I want to re-roll a specific field (this will invalidate the seed)
+- [ ] I want to be able to download and view in a convenient format
 
 As someone who uses this as a library:
-- I want to be able to use either a file system or a database as the underlying storage mechanism
-- I want to be able to plugin my own operations (think graph-expand) that utilize the grammar language
-- I want it to be isolatend and parallelizable so that I can run multiple queries at once
+- [x] I want to be able to use either a file system or a database as the underlying storage mechanism
+- [ ] I want to be able to plugin my own operations (think graph-expand) that utilize the grammar language
+- [x] I want it to be isolatend and parallelizable so that I can run multiple queries at once

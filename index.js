@@ -6,10 +6,35 @@ function arrayify(objectOrArray) {
   }
 }
 
+const systemPlugins = [
+  {
+    canGenerateDry: s => !!s.has,
+    generateDry: ({ is, has }) => {
+      const result = { is }
+      for (const { field, is } of has) {
+        result[field] =  { is }
+      }
+      return result
+    }
+  },
+  {
+    canGenerateDry: s => !!s.oneOf,
+    generateDry: ({ oneOf }, g) => {
+      const which = Math.floor(g.random() * oneOf.length)
+      return oneOf[which]
+    }
+  },
+  {
+    canGenerateDry: s => !!s.value,
+    generateDry: ({ value }) => value
+  }
+]
+
 class GrammarGenerator {
-  constructor({ storage, random }) {
+  constructor({ storage, random }, ...plugins) {
     this.random = random || (() => Math.random())
     this.storage = new StorageAPI(storage, this.random)
+    this.plugins = [...systemPlugins, ...plugins]
   }
 
   async generate(type) {
@@ -19,21 +44,11 @@ class GrammarGenerator {
 
   async generateDry(type) {
     const structure = await this.storage.loadOne(type)
-    if (structure.has) {
-      const result = { is: structure.is }
-      for (const { field, is } of structure.has) {
-        result[field] = { is }
+
+    for (const p of this.plugins) {
+      if (p.canGenerateDry(structure, this)) {
+        return await p.generateDry(structure, this)
       }
-      return result
-    }
-
-    if (structure.oneOf) {
-      const which = Math.floor(this.random() * structure.oneOf.length)
-      return structure.oneOf[which]
-    }
-
-    if (structure.value) {
-      return structure.value
     }
   }
 
