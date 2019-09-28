@@ -15,10 +15,10 @@ describe('plugin', () => {
     storage: new GrammarGenerator.MemoryStorage(grammar),
     random: () => 0
   }, {
-    canGenerateDry: (s) => !!s.complex,
-    generateDry: (s, g) => s.complex.field
+    canGenerate: (s) => !!s.complex,
+    generate: (s, g) => s.complex.field
   })
-  it('uses plugin#generateDry', async () => {
+  it('uses plugin#generate', async () => {
     expect(await generator.generate('complex-type')).to.eql('value')
   })
 })

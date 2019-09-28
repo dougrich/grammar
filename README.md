@@ -17,15 +17,7 @@ An object `has` a set of named fields. For example, a `town/english` might have 
 
 # Operations
 
-`options.load` passed in: asynchronous function that returns all options for a given 'is' condition
-
-`generateDry` generates a 'dry' object that does not expand any fields
-
-`generate` generates the entire tree - essentially a `generateDry` and a `hydrate`
-
-`hydrateStep` takes a partial object and 'hydrates' it one level, expanding it one level
-
-`hydrate` fully expands an object
+`generate` generates the entire tree - essentially a `generate` and a `hydrate`
 
 # Contributing
 

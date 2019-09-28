@@ -1,32 +1,17 @@
-function arrayify(objectOrArray) {
-  if (Array.isArray(objectOrArray)) {
-    return objectOrArray
-  } else {
-    return [objectOrArray]
-  }
-}
+const arrayify = require('./util/arrayify')
 
 const systemPlugins = [
+  require('./plugins/has'),
   {
-    canGenerateDry: s => !!s.has,
-    generateDry: ({ is, has }) => {
-      const result = { is }
-      for (const { field, is } of has) {
-        result[field] =  { is }
-      }
-      return result
-    }
-  },
-  {
-    canGenerateDry: s => !!s.oneOf,
-    generateDry: ({ oneOf }, g) => {
+    canGenerate: s => !!s.oneOf,
+    generate: ({ oneOf }, g) => {
       const which = Math.floor(g.random() * oneOf.length)
       return oneOf[which]
     }
   },
   {
-    canGenerateDry: s => !!s.value,
-    generateDry: ({ value }) => value
+    canGenerate: s => !!s.value,
+    generate: ({ value }) => value
   }
 ]
 
@@ -38,41 +23,25 @@ class GrammarGenerator {
   }
 
   async generate(type) {
-    const s = await this.generateDry(type)
-    return await this.hydrate(s)
-  }
+    let structure = type
+    if (typeof structure === 'string') {
+      structure = await this.storage.loadOne(type)
+    }
 
-  async generateDry(type) {
-    const structure = await this.storage.loadOne(type)
-
+    let collection = null
     for (const p of this.plugins) {
-      if (p.canGenerateDry(structure, this)) {
-        return await p.generateDry(structure, this)
+      if (p.canGenerate(structure, this)) {
+        collection = await p.generate(structure, this)
+        break
       }
-    }
-  }
-
-  async hydrate(collection) {
-    let template = null
-    if (collection.is) {
-      // we have type hinting: add any missing fields
-      const structure = await this.storage.loadOne(collection.is)
-      if (structure.has) {
-        for (const { field, is } of structure.has) {
-          collection[field] = collection[field] || { is }
-        }
-      }
-      template = structure.template
-      delete collection.is
     }
 
-    const fields = Object.keys(collection)
-    for (const f of fields) {
-      if (collection[f] && collection[f].is != null) {
-        // expand this
-        collection[f] = await this.generate(collection[f].is)
-      }
+    if (collection == null) {
+      throw new Error('Expected s to have been generated')
     }
+
+    let template = structure.template
+
     if (template) {
       return GrammarGenerator.template(template, collection)
     } else {
