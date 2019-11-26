@@ -2,17 +2,8 @@ const arrayify = require('./util/arrayify')
 
 const systemPlugins = [
   require('./plugins/has'),
-  {
-    canGenerate: s => !!s.oneOf,
-    generate: ({ oneOf }, g) => {
-      const which = Math.floor(g.random() * oneOf.length)
-      return oneOf[which]
-    }
-  },
-  {
-    canGenerate: s => !!s.value,
-    generate: ({ value }) => value
-  }
+  require('./plugins/oneOf'),
+  require('./plugins/value')
 ]
 
 class GrammarGenerator {
@@ -22,11 +13,60 @@ class GrammarGenerator {
     this.plugins = [...systemPlugins, ...plugins]
   }
 
+  static matchesIs(is, type) {
+    is = arrayify(is)
+    type = arrayify(type)
+  
+    isLoop:
+    for (let i = 0; i < is.length; i++) {
+      for (let j = 0; j < type.length; j++) {
+        if (type[j].indexOf(is[i]) === 0) {
+          // they match
+          continue isLoop
+        }
+      }
+      return false
+    }
+    return true
+  }
+
+  expand(definition) {
+    const result = {}
+
+    for (const f in definition) {
+      if (f === 'is') {
+        result[f] = arrayify(definition[f])
+      } else {
+        result[f] = definition[f]
+      }
+    }
+
+    for (const p of this.plugins) {
+      if (p.canGenerate(definition) && p.expand) {
+        Object.assign(result, p.expand(definition))
+        continue
+      }
+    }
+
+    return result
+  }
+
+  static template(template, fields) {
+    const keys = Object.keys(fields)
+    for (const k of keys) {
+      template = template.replace(new RegExp("\{" + k + "\}", 'gi'), fields[k])
+    }
+    return template
+  }
+
   async generate(type) {
     let structure = type
     if (typeof structure === 'string') {
       structure = await this.storage.loadOne(type)
+    } else if (structure.is) {
+      structure = await this.storage.loadOne(structure.is)
     }
+    structure = this.expand(structure)
 
     let collection = null
     for (const p of this.plugins) {
@@ -65,33 +105,6 @@ class StorageAPI {
   }
 }
 
-function matchesIs(is, type) {
-  is = arrayify(is)
-  type = arrayify(type)
-
-  isLoop:
-  for (let i = 0; i < is.length; i++) {
-    for (let j = 0; j < type.length; j++) {
-      if (type[j].indexOf(is[i]) === 0) {
-        // they match
-        continue isLoop
-      }
-    }
-    return false
-  }
-  return true
-}
-
-GrammarGenerator.template = function(template, fields) {
-  const keys = Object.keys(fields)
-  for (const k of keys) {
-    template = template.replace(new RegExp("\{" + k + "\}", 'gi'), fields[k])
-  }
-  return template
-}
-
-GrammarGenerator.matchesIs = matchesIs
-
 GrammarGenerator.MemoryStorage = class MemoryStorage {
   constructor(defs) {
     this.defs = defs
@@ -101,7 +114,7 @@ GrammarGenerator.MemoryStorage = class MemoryStorage {
     let c = 0
     defLoop:
     for (const def of this.defs) {
-      if (!matchesIs(names, def.is)) continue defLoop
+      if (!GrammarGenerator.matchesIs(names, def.is)) continue defLoop
       c++
     }
     return c
@@ -112,7 +125,7 @@ GrammarGenerator.MemoryStorage = class MemoryStorage {
     let set = []
     defLoop:
     for (const def of this.defs) {
-      if (!matchesIs(names, def.is)) continue defLoop
+      if (!GrammarGenerator.matchesIs(names, def.is)) continue defLoop
       if (c >= offset) {
         set.push(def)
         if (set.length >= count) {
