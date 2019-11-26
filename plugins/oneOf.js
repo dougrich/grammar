@@ -4,10 +4,10 @@ function canGenerate (s) {
   return !!s.oneOf
 }
 
-function expand(s) {
+function expand (s) {
   const oneOf = arrayify(s.oneOf)
   for (let i = 0; i < oneOf.length; i++) {
-    let field = oneOf[i]
+    const field = oneOf[i]
     if (typeof field === 'string') {
       oneOf[i] = { value: field }
     }
@@ -17,7 +17,7 @@ function expand(s) {
   }
 }
 
-async function generate({ oneOf }, g) {
+async function generate ({ oneOf }, g) {
   const weights = oneOf.map(({ weight }) => weight || 1)
   const totalWeight = weights.reduce((sum, weight) => sum + weight, 0)
   let which = Math.floor(g.random() * totalWeight)

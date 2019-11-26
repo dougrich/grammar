@@ -1,14 +1,14 @@
-const { expect } = require('chai')
+const { expect } = require('./_chai')
 const plugin = require('../plugins/has')
 const GrammarGenerator = require('../')
 
 describe('plugin/has', () => {
   describe('#canGenerate', () => {
     it('can generate if definition has a has field', () => {
-      expect(plugin.canGenerate({ has: [] })).to.be.true
+      expect(plugin.canGenerate({ has: [] })).to.be.true()
     })
     it('cannot generate if definition lacks a has field', () => {
-      expect(plugin.canGenerate({  })).to.be.false
+      expect(plugin.canGenerate({ })).to.be.false()
     })
   })
 
@@ -38,7 +38,7 @@ describe('plugin/has', () => {
           ]
         }
       ]
-    ].forEach(([ name, input, output ]) => {
+    ].forEach(([name, input, output]) => {
       it(name, () => {
         expect(plugin.expand(input)).to.eql(output)
       })

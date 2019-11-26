@@ -7,30 +7,31 @@ const systemPlugins = [
 ]
 
 class GrammarGenerator {
-  constructor({ storage, random }, ...plugins) {
+  constructor ({ storage, random }, ...plugins) {
     this.random = random || (() => Math.random())
     this.storage = new StorageAPI(storage, this.random)
     this.plugins = [...systemPlugins, ...plugins]
   }
 
-  static matchesIs(is, type) {
+  static matchesIs (is, type) {
     is = arrayify(is)
     type = arrayify(type)
-  
-    isLoop:
+
     for (let i = 0; i < is.length; i++) {
+      let matches = false
       for (let j = 0; j < type.length; j++) {
         if (type[j].indexOf(is[i]) === 0) {
           // they match
-          continue isLoop
+          matches = true
+          break
         }
       }
-      return false
+      if (!matches) return false
     }
     return true
   }
 
-  expand(definition) {
+  expand (definition) {
     const result = {}
 
     for (const f in definition) {
@@ -51,15 +52,15 @@ class GrammarGenerator {
     return result
   }
 
-  static template(template, fields) {
+  static template (template, fields) {
     const keys = Object.keys(fields)
     for (const k of keys) {
-      template = template.replace(new RegExp("\{" + k + "\}", 'gi'), fields[k])
+      template = template.replace(new RegExp('{' + k + '}', 'gi'), fields[k])
     }
     return template
   }
 
-  async generate(type) {
+  async generate (type) {
     let structure = type
     if (typeof structure === 'string') {
       structure = await this.storage.loadOne(type)
@@ -80,7 +81,7 @@ class GrammarGenerator {
       throw new Error('Expected s to have been generated')
     }
 
-    let template = structure.template
+    const template = structure.template
 
     if (template) {
       return GrammarGenerator.template(template, collection)
@@ -91,12 +92,12 @@ class GrammarGenerator {
 }
 
 class StorageAPI {
-  constructor(wrapped, random) {
+  constructor (wrapped, random) {
     this.wrapped = wrapped
     this.random = random
   }
 
-  async loadOne(name) {
+  async loadOne (name) {
     const names = arrayify(name)
     const count = await this.wrapped.count(names)
     const which = Math.floor(this.random() * count)
@@ -106,30 +107,27 @@ class StorageAPI {
 }
 
 GrammarGenerator.MemoryStorage = class MemoryStorage {
-  constructor(defs) {
+  constructor (defs) {
     this.defs = defs
   }
 
-  async count(names) {
+  async count (names) {
     let c = 0
-    defLoop:
     for (const def of this.defs) {
-      if (!GrammarGenerator.matchesIs(names, def.is)) continue defLoop
-      c++
+      if (GrammarGenerator.matchesIs(names, def.is)) c++
     }
     return c
   }
 
-  async load(names, offset, count) {
+  async load (names, offset, count) {
     let c = 0
-    let set = []
-    defLoop:
+    const set = []
     for (const def of this.defs) {
-      if (!GrammarGenerator.matchesIs(names, def.is)) continue defLoop
+      if (!GrammarGenerator.matchesIs(names, def.is)) continue
       if (c >= offset) {
         set.push(def)
         if (set.length >= count) {
-          break defLoop
+          return set
         }
       }
       c++

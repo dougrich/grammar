@@ -1,4 +1,4 @@
-const { expect } = require('chai')
+const { expect } = require('./_chai')
 
 const GrammarGenerator = require('../')
 

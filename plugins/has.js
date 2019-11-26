@@ -4,10 +4,10 @@ function canGenerate (s) {
   return !!s.has
 }
 
-function expand(s) {
+function expand (s) {
   const has = arrayify(s.has)
   for (let i = 0; i < has.length; i++) {
-    let field = has[i]
+    const field = has[i]
     if (typeof field === 'string') {
       const [fieldname] = field.split('/', 1)
       has[i] = {
@@ -21,7 +21,7 @@ function expand(s) {
   }
 }
 
-async function generate({ has }, lexicon) {
+async function generate ({ has }, lexicon) {
   const result = { }
   for (const next of has) {
     result[next.field] = await lexicon.generate(next)

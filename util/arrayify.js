@@ -1,4 +1,4 @@
-module.exports = function arrayify(objectOrArray) {
+module.exports = function arrayify (objectOrArray) {
   if (Array.isArray(objectOrArray)) {
     return objectOrArray
   } else {

@@ -4,7 +4,8 @@
   "description": "Randomized grammar library",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "lint": "standard"
   },
   "author": {
     "name": "Douglas Richardson"
@@ -16,6 +17,13 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.2.0"
+    "dirty-chai": "^2.0.1",
+    "mocha": "^6.2.0",
+    "standard": "^14.3.1"
+  },
+  "standard": {
+    "env": [
+      "mocha"
+    ]
   }
 }

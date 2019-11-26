@@ -1,14 +1,14 @@
-const { expect } = require('chai')
+const { expect } = require('./_chai')
 const plugin = require('../plugins/oneOf')
 const GrammarGenerator = require('../')
 
 describe('plugins/oneOf', () => {
   describe('#canGenerate', () => {
     it('can generate if definition has a oneOf field', () => {
-      expect(plugin.canGenerate({ oneOf: [] })).to.be.true
+      expect(plugin.canGenerate({ oneOf: [] })).to.be.true()
     })
     it('cannot generate if definition lacks a oneOf field', () => {
-      expect(plugin.canGenerate({  })).to.be.false
+      expect(plugin.canGenerate({ })).to.be.false()
     })
   })
 
@@ -38,7 +38,7 @@ describe('plugins/oneOf', () => {
           ]
         }
       ]
-    ].forEach(([ name, input, output ]) => {
+    ].forEach(([name, input, output]) => {
       it(name, () => {
         expect(plugin.expand(input)).to.eql(output)
       })
@@ -79,7 +79,7 @@ describe('plugins/oneOf', () => {
         0,
         'tested'
       ]
-    ].forEach(([ name, input, randomV, output ]) => {
+    ].forEach(([name, input, randomV, output]) => {
       it(name, async () => {
         const generator = new GrammarGenerator({
           storage: new GrammarGenerator.MemoryStorage([
@@ -93,7 +93,6 @@ describe('plugins/oneOf', () => {
         const expanded = plugin.expand(input)
         expect(await plugin.generate(expanded, generator)).to.eql(output)
       })
-
     })
   })
 })

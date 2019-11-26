@@ -1,4 +1,4 @@
-const { expect } = require('chai')
+const { expect } = require('./_chai')
 
 const GrammarGenerator = require('..')
 
@@ -30,7 +30,7 @@ describe('GrammarGenerator#expand', () => {
         ]
       }
     ]
-  ].forEach(([ name, input, expectedOutput ]) => {
+  ].forEach(([name, input, expectedOutput]) => {
     it(name, () => {
       const generator = new GrammarGenerator({
         storage: null,

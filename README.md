@@ -4,6 +4,8 @@
 
 <a href="https://github.com/dougrich/grammar" alt="Github"><img src="https://img.shields.io/github/last-commit/dougrich/grammar" /></a>
 
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
 # Theoretical Structure
 
 `is` and `has` structure.
