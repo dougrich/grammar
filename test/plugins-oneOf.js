@@ -65,6 +65,26 @@ describe('plugins/oneOf', () => {
             '/options/1': { value: 'exambleB' }
           }
         }
+      ],
+      [
+        'manual weighting',
+        { oneOf: [{ value: 'a', weight: 4 }, { value: 'b', weight: 5 }] },
+        {
+          distribution: {
+            weights: [
+              { absolute: 4 },
+              { absolute: 5 }
+            ]
+          },
+          options: [
+            null,
+            null
+          ],
+          $ref: {
+            '/options/0': { value: 'a' },
+            '/options/1': { value: 'b' },
+          }
+        }
       ]
     ]
   )

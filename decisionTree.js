@@ -63,10 +63,6 @@ class DecisionTree {
   }
 
   evaluateDistribution(distribution, pointer, context) {
-    if (!distribution) {
-      this.debug('MISSING DISTRIBUTION')
-      return 0
-    }
     if (distribution.weights) {
       const weights = distribution.weights.map(x => x.absolute)
       return this.weightedChoice(weights)
@@ -78,10 +74,14 @@ class DecisionTree {
           const { lookup, eq } = input
           const lookupPointer = path.resolve(pointer, lookup)
           const lookupValue = JSONPointer.get(context, lookupPointer)
-          if (lookupValue === eq) {
-            return 1
+          if (eq) {
+            if (lookupValue === eq) {
+              return 1
+            } else {
+              return 0
+            }
           } else {
-            return 0
+            return lookupValue
           }
         })
         .map((_, index, array) => {
