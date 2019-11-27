@@ -1,6 +1,6 @@
 const { expect } = require('./_chai')
 
-const GrammarGenerator = require('..')
+const matchesIs = require('../util/matchesIs')
 
 describe('#matchesIs', () => {
   [
@@ -13,7 +13,7 @@ describe('#matchesIs', () => {
     ['realistic specific mismatch', ['place/oceanic', 'place/coastal'], ['place/oceanic', 'place/deep'], false]
   ].forEach(([name, is, type, matches]) => {
     it(name, () => {
-      expect(GrammarGenerator.matchesIs(is, type)).to.equal(matches)
+      expect(matchesIs(is, type)).to.equal(matches)
     })
   })
 })

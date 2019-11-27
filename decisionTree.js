@@ -28,6 +28,21 @@ class DecisionTree {
     this.debug = opts.debug || (msg => console.debug(msg))
   }
 
+  applyTemplate(template, value, pointer, context) {
+    return () => {
+      let final = ''
+      for (const templatePart of template) {
+        if (typeof templatePart === 'string') {
+          final += templatePart
+        } else if (templatePart.lookup) {
+          const result = JSONPointer.get(value, templatePart.lookup)
+          final += result
+        }
+      }
+      JSONPointer.set(context, pointer, final)
+    }
+  }
+
   evaluateDistribution(distribution) {
     if (!distribution) {
       this.debug('MISSING DISTRIBUTION')
@@ -49,6 +64,7 @@ class DecisionTree {
       decisionVector
     }
     let decisionQueue = [{ decision: tree, pointer: '/result' }]
+    let postOps = []
 
     while (decisionQueue.length) {
       const { decision, pointer } = decisionQueue.shift()
@@ -72,6 +88,17 @@ class DecisionTree {
         value = decision.value
       }
       JSONPointer.set(context, pointer, value)
+      if (decision.$template) {
+        // note that this is deferred as we haven't made child decisions yet
+        postOps.push(this.applyTemplate(decision.$template, value, pointer, context))
+      }
+    }
+    
+    // this is important so that operations deeper in the tree are executed before operations earlier in the tree
+    postOps.reverse()
+
+    for (const op of postOps) {
+      op()
     }
 
     return context

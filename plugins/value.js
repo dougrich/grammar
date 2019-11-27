@@ -1,4 +1,4 @@
 module.exports = {
-  canGenerate: s => !!s.value,
-  generate: ({ value }) => value
+  canParse: p => p.value !== undefined,
+  parsePartial: ({ value }) => ({ value })
 }

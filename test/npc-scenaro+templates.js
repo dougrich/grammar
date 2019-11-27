@@ -1,26 +1,27 @@
 const { expect } = require('./_chai')
+const Storage = require('./_memory-storage')
 
-const GrammarGenerator = require('../')
+const { generate } = require('../')
 
 describe('Realistic NPC scenario + templates', () => {
   const grammar = [
     {
       is: ['given-name/human'],
       oneOf: [
-        'Patrick',
-        'Patricia',
-        'Mark',
-        'Maria',
-        'Stewart',
-        'Susan'
+        { value: 'Patrick' },
+        { value: 'Patricia' },
+        { value: 'Mark' },
+        { value: 'Maria' },
+        { value: 'Stewart' },
+        { value: 'Susan' }
       ]
     },
     {
       is: ['surname/human'],
       oneOf: [
-        'McDonald',
-        'Trudeau',
-        'Oswald'
+        { value: 'McDonald' },
+        { value: 'Trudeau' },
+        { value: 'Oswald' }
       ]
     },
     {
@@ -40,17 +41,17 @@ describe('Realistic NPC scenario + templates', () => {
     {
       is: ['nickname'],
       oneOf: [
-        'Sticky Fingers',
-        'The Butcher',
-        'Longwatch'
+        { value: 'Sticky Fingers' },
+        { value: 'The Butcher' },
+        { value: 'Longwatch' }
       ]
     },
     {
       is: ['name/orc'],
       oneOf: [
-        'Grok',
-        'Nobb',
-        'Arak'
+        { value: 'Grok' },
+        { value: 'Nobb' },
+        { value: 'Arak' }
       ]
     },
     {
@@ -88,7 +89,9 @@ describe('Realistic NPC scenario + templates', () => {
         }
       ]
     }
-  ];
+  ]
+
+  const storage = new Storage(grammar);
 
   [
     ['understands fuzzy', 'name', 0, 'Patrick McDonald'],
@@ -97,13 +100,11 @@ describe('Realistic NPC scenario + templates', () => {
       race: 'Human',
       name: 'Patrick McDonald'
     }]
-  ].forEach(([scenario, type, randomV, result]) => {
+  ].forEach(([scenario, type, randomV, expected]) => {
     it(scenario, async () => {
-      const generator = new GrammarGenerator({
-        storage: new GrammarGenerator.MemoryStorage(grammar),
-        random: () => randomV
-      })
-      expect(await generator.generate(type)).to.eql(result)
+      const random = () => randomV
+      const { result } = await generate({ storage, random }, type)
+      expect(result).to.eql(expected)
     })
   })
 })

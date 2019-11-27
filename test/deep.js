@@ -1,6 +1,7 @@
 const { expect } = require('./_chai')
+const Storage = require('./_memory-storage')
 
-const GrammarGenerator = require('../')
+const { generate } = require('../')
 
 describe('Deep + Succint', () => {
   const grammar = [
@@ -20,17 +21,15 @@ describe('Deep + Succint', () => {
       is: 'pinnacle',
       has: 'top'
     }
-  ];
+  ]
+  const storage = new Storage(grammar);
 
   [
-    ['understands fuzzy', 'pinnacle', 0, { top: { middle: { bottom: 'test' } } }]
-  ].forEach(([scenario, type, randomV, result]) => {
+    ['understands fuzzy', 'pinnacle', { top: { middle: { bottom: 'test' } } }]
+  ].forEach(([scenario, type, expected]) => {
     it(scenario, async () => {
-      const generator = new GrammarGenerator({
-        storage: new GrammarGenerator.MemoryStorage(grammar),
-        random: () => randomV
-      })
-      expect(await generator.generate(type)).to.eql(result)
+      const { result } = await generate({ storage }, type)
+      expect(result).to.eql(expected)
     })
   })
 })

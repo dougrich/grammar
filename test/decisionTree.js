@@ -61,7 +61,18 @@ const NestedEasyDecision = {
   ]
 }
 
-describe.only('DecisionTree', () => {
+const TemplatedDecision = {
+  children: {
+    left: EasyDecision
+  },
+  $template: [
+    'this is a ',
+    { lookup: '/left' },
+    ' decision'
+  ]
+}
+
+describe('DecisionTree', () => {
 
   const scenarios = [
     [
@@ -142,6 +153,15 @@ describe.only('DecisionTree', () => {
         result: {
           name: 'test 0'
         }
+      }
+    ],
+    [
+      'templated',
+      TemplatedDecision,
+      [0],
+      {
+        decisionVector: [0],
+        result: 'this is a test 0 decision'
       }
     ]
   ]

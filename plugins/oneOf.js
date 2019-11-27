@@ -1,43 +1,44 @@
 const arrayify = require('../util/arrayify')
 
-function canGenerate (s) {
+function canParse (s) {
   return !!s.oneOf
 }
 
-function expand (s) {
+function parsePartial (s) {
   const oneOf = arrayify(s.oneOf)
-  for (let i = 0; i < oneOf.length; i++) {
-    const field = oneOf[i]
-    if (typeof field === 'string') {
-      oneOf[i] = { value: field }
-    }
-  }
-  return {
-    oneOf
-  }
-}
-
-async function generate ({ oneOf }, g) {
-  const weights = oneOf.map(({ weight }) => weight || 1)
-  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0)
-  let which = Math.floor(g.random() * totalWeight)
-
-  let i = 0
-  while (i < weights.length) {
-    if (which < weights[i]) {
-      break
+  if (oneOf.length === 1) {
+    if (typeof oneOf[0] !== 'object') {
+      return { value: oneOf[0] }
     } else {
-      which -= weights[i]
+      return oneOf[0]
     }
-    i++
   }
 
-  const result = oneOf[Math.min(i, weights.length)]
-  return g.generate(result)
+  const weights = new Array(oneOf.length)
+  const options = new Array(oneOf.length)
+  options.fill(null)
+  let $ref = {}
+
+  for (let i = 0; i < oneOf.length; i++) {
+    let option = oneOf[i]
+    weights[i] = { absolute: 1 }
+    if (typeof option !== 'object') {
+      option = { is: option }
+    }
+    $ref['/options/' + i] = option
+  }
+
+
+  return {
+    distribution: {
+      weights
+    },
+    options,
+    $ref
+  }
 }
 
 module.exports = {
-  canGenerate,
-  expand,
-  generate
+  canParse,
+  parsePartial
 }

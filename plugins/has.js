@@ -1,36 +1,43 @@
 const arrayify = require('../util/arrayify')
+const parseTemplate = require('../util/parseTemplate')
 
-function canGenerate (s) {
+function canParse (s) {
   return !!s.has
 }
 
-function expand (s) {
+function parsePartial (s) {
   const has = arrayify(s.has)
+  const children = {}
+  const $ref = {}
   for (let i = 0; i < has.length; i++) {
-    const field = has[i]
+    let field = has[i]
     if (typeof field === 'string') {
       const [fieldname] = field.split('/', 1)
-      has[i] = {
+      field = {
         field: fieldname,
         is: field
       }
     }
+    const child = JSON.parse(JSON.stringify(field))
+    children[child.field] = null
+    const key = '/children/' + child.field
+    delete child.field
+    $ref[key] = child
   }
-  return {
-    has
-  }
-}
 
-async function generate ({ has }, lexicon) {
-  const result = { }
-  for (const next of has) {
-    result[next.field] = await lexicon.generate(next)
+  const result = {
+    children,
+    $ref
   }
+
+  if (s.template) {
+    result.$template = parseTemplate(s.template)
+  }
+
   return result
 }
 
 module.exports = {
-  canGenerate,
-  expand,
-  generate
+  canParse,
+  parsePartial
 }
