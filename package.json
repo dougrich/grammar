@@ -1,6 +1,6 @@
 {
   "name": "@dougrich/grammar",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Randomized grammar library",
   "main": "index.js",
   "scripts": {
