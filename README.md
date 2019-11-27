@@ -39,8 +39,8 @@ As someone who authors content for the grammar:
 As someone who uses the grammar to generate content:
 - [x] I want to hit a button and get the entire tree
 - [x] I want to hit a button and get the top level fields, then manually expand the rest of the tree
-- [ ] I want to use a 'seed' to guarantee consistent results across multiple re-builds
-- [x] I want to re-roll a specific field (this will invalidate the seed)
+- [x] I want to use a 'seed' to guarantee consistent results across multiple re-builds
+- [x] I want to re-roll a specific field
 - [ ] I want to be able to download and view in a convenient format
 
 As someone who uses this as a library:

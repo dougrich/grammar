@@ -72,6 +72,39 @@ const TemplatedDecision = {
   ]
 }
 
+const ContextualDecision = (color) => {
+  return ({
+    children: {
+      color: { value: color },
+      auxilary: {
+        dependsOn: ['../color'],
+        distribution: {
+          matrix: {
+            inputs: [
+              { lookup: '../color', eq: 'red' },
+              { lookup: '../color', eq: 'blue' },
+              { lookup: '../color', eq: 'green' },
+              0,
+            ],
+            values: [
+              [ 1, 0, 0, 0 ],
+              [ 0, 1, 0, 0 ],
+              [ 0, 0, 1, 0 ],
+              [ 0, 0, 0, 0 ]
+            ]
+          }
+        },
+        options: [
+          { value: 'pink' },
+          { value: 'periwinkle' },
+          { value: 'lime' },
+          { value: 'black' }
+        ]
+      }
+    }
+  })
+}
+
 describe('DecisionTree', () => {
 
   const scenarios = [
@@ -162,6 +195,54 @@ describe('DecisionTree', () => {
       {
         decisionVector: [0],
         result: 'this is a test 0 decision'
+      }
+    ],
+    [
+      'Contextual red',
+      ContextualDecision('red'),
+      [0],
+      {
+        decisionVector: [0],
+        result: {
+          color: 'red',
+          auxilary: 'pink'
+        }
+      }
+    ],
+    [
+      'Contextual blue',
+      ContextualDecision('blue'),
+      [0],
+      {
+        decisionVector: [1],
+        result: {
+          color: 'blue',
+          auxilary: 'periwinkle'
+        }
+      }
+    ],
+    [
+      'Contextual green',
+      ContextualDecision('green'),
+      [0],
+      {
+        decisionVector: [2],
+        result: {
+          color: 'green',
+          auxilary: 'lime'
+        }
+      }
+    ],
+    [
+      'Contextual else',
+      ContextualDecision('purple'),
+      [0],
+      {
+        decisionVector: [3],
+        result: {
+          color: 'purple',
+          auxilary: 'black'
+        }
       }
     ]
   ]
