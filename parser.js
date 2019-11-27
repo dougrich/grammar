@@ -3,7 +3,8 @@ const JSONPointer = require('json-pointer')
 const systemPlugins = [
   require('./plugins/has'),
   require('./plugins/oneOf'),
-  require('./plugins/value')
+  require('./plugins/value'),
+  require('./plugins/switch')
 ]
 
 class Parser {
