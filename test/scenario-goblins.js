@@ -18,7 +18,7 @@ describe('scenario/goblins', () => {
       has: {
         minionCount: { number: '2d6 + 1' }
       },
-      template: `{minionCount} goblins lead by a daring goblin boss`
+      template: '{minionCount} goblins lead by a daring goblin boss'
     },
     {
       is: 'tower/goblin',
