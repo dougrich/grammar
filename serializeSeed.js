@@ -1,11 +1,11 @@
 const seperator = '-'
 const prefix = 'seed@'
 
-function toSeed(array) {
+function toSeed (array) {
   return prefix + array.map(i => i.toString(16)).join(seperator)
 }
 
-function fromSeed(seed) {
+function fromSeed (seed) {
   return seed.slice(prefix.length).split(seperator).map(s => parseInt(s, 16))
 }
 

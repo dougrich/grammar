@@ -1,4 +1,4 @@
-function parsePartial({ matrix }) {
+function parsePartial ({ matrix }) {
   const dependsOn = []
   const inputs = []
   const values = []

@@ -1,5 +1,5 @@
-function parseTemplate(raw) {
-  let commands = []
+function parseTemplate (raw) {
+  const commands = []
   let index = 0
   while ((index = raw.indexOf('{', index)) >= 0) {
     commands.push(raw.slice(0, index))

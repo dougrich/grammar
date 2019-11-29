@@ -7,9 +7,11 @@ describe('plugins/value', () => {
     [
       [
         'simple',
-        { matrix: {
+        {
+          matrix: {
 
-        } }
+          }
+        }
       ]
     ],
     [
@@ -19,7 +21,7 @@ describe('plugins/value', () => {
       ]
     ]
   )
-  
+
   parsePartial(
     plugin,
     [
@@ -32,8 +34,8 @@ describe('plugins/value', () => {
               { lookup: '../villiany' }
             ],
             rows: [
-              { value: 'red', coefficients: [0.5,0.6] },
-              { value: 'blue', coefficients: [0.7,0.2] }
+              { value: 'red', coefficients: [0.5, 0.6] },
+              { value: 'blue', coefficients: [0.7, 0.2] }
             ]
           }
         },
@@ -43,11 +45,11 @@ describe('plugins/value', () => {
             matrix: {
               inputs: [
                 { lookup: '../morality' },
-                { lookup: '../villiany' },
+                { lookup: '../villiany' }
               ],
               values: [
-                [ 0.5, 0.6, ],
-                [ 0.7, 0.2, ],
+                [0.5, 0.6],
+                [0.7, 0.2]
               ]
             }
           },

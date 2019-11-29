@@ -1,4 +1,4 @@
-function parsePartial(decision) {
+function parsePartial (decision) {
   const cases = decision.switch
   const [dependency] = Object.keys(cases)
   let values = Object.keys(cases[dependency])

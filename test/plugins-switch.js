@@ -7,9 +7,11 @@ describe('plugins/value', () => {
     [
       [
         'simple',
-        { switch: {
+        {
+          switch: {
 
-        } }
+          }
+        }
       ]
     ],
     [
@@ -19,7 +21,7 @@ describe('plugins/value', () => {
       ]
     ]
   )
-  
+
   parsePartial(
     plugin,
     [
@@ -28,10 +30,10 @@ describe('plugins/value', () => {
         {
           switch: {
             '../color': {
-              'red': { value: 'pink' },
-              'blue': { value: 'periwinkle' },
-              'green': { value: 'lime' },
-              $default: { value: 'black' },
+              red: { value: 'pink' },
+              blue: { value: 'periwinkle' },
+              green: { value: 'lime' },
+              $default: { value: 'black' }
             }
           }
         },
@@ -43,13 +45,13 @@ describe('plugins/value', () => {
                 { lookup: '../color', eq: 'red' },
                 { lookup: '../color', eq: 'blue' },
                 { lookup: '../color', eq: 'green' },
-                0,
+                0
               ],
               values: [
-                [ 1, 0, 0, 0 ],
-                [ 0, 1, 0, 0 ],
-                [ 0, 0, 1, 0 ],
-                [ 0, 0, 0, 0 ]
+                [1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 0]
               ]
             }
           },

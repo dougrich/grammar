@@ -84,13 +84,13 @@ const ContextualDecision = (color) => {
               { lookup: '../color', eq: 'red' },
               { lookup: '../color', eq: 'blue' },
               { lookup: '../color', eq: 'green' },
-              0,
+              0
             ],
             values: [
-              [ 1, 0, 0, 0 ],
-              [ 0, 1, 0, 0 ],
-              [ 0, 0, 1, 0 ],
-              [ 0, 0, 0, 0 ]
+              [1, 0, 0, 0],
+              [0, 1, 0, 0],
+              [0, 0, 1, 0],
+              [0, 0, 0, 0]
             ]
           }
         },
@@ -114,14 +114,13 @@ const NumericDecision = {
         inputs: {
           str: { lookup: '../str' }
         },
-        eq: { args: [{ args: [1, 6], op: 'd' }, { arg: 'str' }], op: '+' },
+        eq: { args: [{ args: [1, 6], op: 'd' }, { arg: 'str' }], op: '+' }
       }
     }
   }
 }
 
 describe('DecisionTree', () => {
-
   const scenarios = [
     [
       'simple case',
@@ -165,9 +164,9 @@ describe('DecisionTree', () => {
     [
       'branching',
       BranchingDecision,
-      [0,0,0,0,0,0,0,0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
       {
-        decisionVector: [0,0,0,0,0,0,0,0],
+        decisionVector: [0, 0, 0, 0, 0, 0, 0, 0],
         result: {
           left: {
             testA: 'test 0',
@@ -195,9 +194,9 @@ describe('DecisionTree', () => {
     [
       'nested easy',
       NestedEasyDecision,
-      [0,0],
+      [0, 0],
       {
-        decisionVector: [0,0],
+        decisionVector: [0, 0],
         result: {
           name: 'test 0'
         }
@@ -275,7 +274,7 @@ describe('DecisionTree', () => {
   ]
 
   describe('#collapse', () => {
-    scenarios.forEach(([ name, tree, randomVSequence, expected ]) => {
+    scenarios.forEach(([name, tree, randomVSequence, expected]) => {
       it(name, () => {
         let i = 0
         const random = () => randomVSequence[i++]
@@ -286,7 +285,7 @@ describe('DecisionTree', () => {
   })
 
   describe('#hydrate', () => {
-    scenarios.forEach(([ name, tree, randomVSequence, expected ]) => {
+    scenarios.forEach(([name, tree, randomVSequence, expected]) => {
       it(name, () => {
         const engine = new DecisionTree()
         expect(engine.hydrate(tree, expected.decisionVector)).to.eql(expected.result)
@@ -309,7 +308,7 @@ describe('DecisionTree', () => {
           }
         }
       ]
-    ].forEach(([ name, tree, decisionVector, rerollPath, randomVSequence, expected ]) => {
+    ].forEach(([name, tree, decisionVector, rerollPath, randomVSequence, expected]) => {
       it(name, () => {
         let i = 0
         const random = () => randomVSequence[i++]
@@ -318,5 +317,4 @@ describe('DecisionTree', () => {
       })
     })
   })
-
 })

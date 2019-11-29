@@ -37,9 +37,9 @@ describe('Parser#parsePartial', () => {
       is: 'container/nested',
       has: 'leaf/nested'
     }
-  ];
+  ]
 
-  const storage = new Storage(grammar);
+  const storage = new Storage(grammar)
 
   describe('#parsePartial', () => {
     [

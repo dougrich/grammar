@@ -1,6 +1,6 @@
 const { expect } = require('./_chai')
 
-function canParse(plugin, parseable, unparseable) {
+function canParse (plugin, parseable, unparseable) {
   describe('#canParse', () => {
     describe('can parse', () => {
       parseable.forEach(([name, definition]) => {
@@ -19,7 +19,7 @@ function canParse(plugin, parseable, unparseable) {
   })
 }
 
-function parsePartial(plugin, scenarios) {
+function parsePartial (plugin, scenarios) {
   describe('#parsePartial', () => {
     scenarios.forEach(([name, definition, result]) => {
       it(name, () => {

@@ -1,3 +1,6 @@
+/* eslint-disable no-cond-assign */
+// disabled because of heavy regex usage, and this is baked into clean regex code
+
 const toWeightedOptions = require('./dice')
 
 // in ascending order of precedence
@@ -6,7 +9,7 @@ const operators = [
     match: (lookahead) => /^\+/.exec(lookahead)
   },
   {
-    match: (lookahead) => /^\-/.exec(lookahead)
+    match: (lookahead) => /^-/.exec(lookahead)
   },
   {
     match: (lookahead) => /^d/.exec(lookahead)
@@ -24,7 +27,7 @@ const tokenMatchers = [
   }
 ]
 
-function parse(phrase) {
+function parse (phrase) {
   const output = []
   const operatorStack = []
   let i = 0
@@ -44,7 +47,7 @@ function parse(phrase) {
       let match = null
       if (match = operator.match(lookahead)) {
         while (operatorStack.length) {
-          let { precedence } = operatorStack[operatorStack.length - 1]
+          const { precedence } = operatorStack[operatorStack.length - 1]
           if (precedence >= j) {
             const { token } = operatorStack.pop()
             const right = output.pop()
@@ -98,13 +101,13 @@ function parse(phrase) {
 const ops = {
   '+': ([a, b]) => a + b,
   '-': ([a, b]) => a - b,
-  'd': ([a, b], decider) => {
+  d: ([a, b], decider) => {
     const options = toWeightedOptions(a, b)
     return decider({ distribution: { weights: options } }) + a
   }
 }
 
-function evaluate(sequence, decider, rootargs) {
+function evaluate (sequence, decider, rootargs) {
   if (typeof sequence !== 'object') {
     return sequence
   } else if (sequence.arg) {

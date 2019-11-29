@@ -17,7 +17,7 @@ function parsePartial (s) {
   const weights = new Array(oneOf.length)
   const options = new Array(oneOf.length)
   options.fill(null)
-  let $ref = {}
+  const $ref = {}
 
   for (let i = 0; i < oneOf.length; i++) {
     let option = oneOf[i]
@@ -29,7 +29,6 @@ function parsePartial (s) {
     delete option.weight
     $ref['/options/' + i] = option
   }
-
 
   return {
     distribution: {

@@ -12,7 +12,7 @@ describe('dice', () => {
         1,
         1,
         1,
-        1,
+        1
       ]
     ],
     [
@@ -61,7 +61,7 @@ describe('dice', () => {
         1
       ]
     ]
-  ].forEach(([ name, [count, faces], result]) => {
+  ].forEach(([name, [count, faces], result]) => {
     it(name, () => {
       expect(toWeightedOptions(count, faces)).to.eql(result)
     })

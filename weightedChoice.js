@@ -1,4 +1,4 @@
-function weightedChoice(weights, randomValue) {
+function weightedChoice (weights, randomValue) {
   let sum = 0
   for (let i = 0; i < weights.length; i++) {
     sum += weights[i]

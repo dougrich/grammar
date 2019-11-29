@@ -17,7 +17,7 @@ describe('plugins/oneOf', () => {
       ]
     ]
   )
-  
+
   parsePartial(
     plugin,
     [
@@ -48,7 +48,7 @@ describe('plugins/oneOf', () => {
       ],
       [
         'referencedChoice',
-        { oneOf: ['exampleA', { value: 'exambleB' } ] },
+        { oneOf: ['exampleA', { value: 'exambleB' }] },
         {
           distribution: {
             weights: [
@@ -82,7 +82,7 @@ describe('plugins/oneOf', () => {
           ],
           $ref: {
             '/options/0': { value: 'a' },
-            '/options/1': { value: 'b' },
+            '/options/1': { value: 'b' }
           }
         }
       ]

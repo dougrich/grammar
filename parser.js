@@ -15,7 +15,7 @@ class Parser {
     this.plugins = [...systemPlugins, ...plugins]
   }
 
-  parseLeaf(leaf) {
+  parseLeaf (leaf) {
     for (const p of this.plugins) {
       if (p.canParse && p.canParse(leaf)) {
         return p.parsePartial(leaf)
@@ -51,7 +51,7 @@ class Parser {
 
   async parse (typename) {
     const root = await this.parsePartial(typename)
-    let stepQueue = [root]
+    const stepQueue = [root]
     while (stepQueue.length) {
       const next = stepQueue.shift()
       if (next.$ref) {

@@ -9,29 +9,29 @@ const { evaluate } = require('./number')
  * - has (expands into children)
  * - multiple types (expands into options + distribution)
  * - value (expands into value)
- * 
+ *
  * Unsupported Types:
  * - someOf (needs count and option count)
  * - optional children (no representation or count)
  * - switch (needs contextual weighting)
  * - matrix (needs contextual weighting)
- * 
+ *
  * Supported Operations:
  * - collapse tree and generate a new decision vector
  * - hydrate tree with a given decision vector
  * - reroll a branch of a tree with a given decision vector deciding the rest
- * 
+ *
  * Unsupported Operations
  * - partial execution (maximum depth)
  */
 
 class DecisionTree {
-  constructor(opts = {}) {
+  constructor (opts = {}) {
     this.random = opts.random || (() => Math.random())
     this.debug = opts.debug || (msg => console.debug(msg))
   }
 
-  applyTemplate(template, value, pointer, context) {
+  applyTemplate (template, value, pointer, context) {
     return () => {
       let final = ''
       for (const templatePart of template) {
@@ -46,7 +46,7 @@ class DecisionTree {
     }
   }
 
-  evaluateDistribution(distribution, pointer, context) {
+  evaluateDistribution (distribution, pointer, context) {
     if (distribution.weights) {
       const weights = distribution.weights.map(x => {
         if (typeof x === 'number') {
@@ -86,12 +86,12 @@ class DecisionTree {
     }
   }
 
-  evaluateTree(tree, makeDecision, decisionVector = []) {
-    let context = {
+  evaluateTree (tree, makeDecision, decisionVector = []) {
+    const context = {
       decisionVector
     }
-    let decisionQueue = [{ decision: tree, pointer: '/result' }]
-    let postOps = []
+    const decisionQueue = [{ decision: tree, pointer: '/result' }]
+    const postOps = []
     // list of visited paths
     const visited = {}
     // list of dependencies that need to be resolved
@@ -116,10 +116,9 @@ class DecisionTree {
           }
         }
         // we still have unfufilled dependencies
-        if (unfufilled.length)
-          continue
+        if (unfufilled.length) { continue }
       }
-      
+
       if (decision.children) {
         value = {}
         const keys = Object.keys(decision.children)
@@ -154,10 +153,10 @@ class DecisionTree {
       } else if (decision.value) {
         value = decision.value
       }
-      
+
       JSONPointer.set(context, pointer, value)
       visited[pointer] = true
-      
+
       if (dependencies[pointer]) {
         for (const decisionContainer of dependencies[pointer]) {
           decisionQueue.push(decisionContainer)
@@ -190,14 +189,14 @@ class DecisionTree {
 
   hydrate (tree, decisionVector) {
     let index = 0
-    let decide = () => decisionVector[index++]
+    const decide = () => decisionVector[index++]
     return this.evaluateTree(tree, decide).result
   }
 
   reroll (tree, decisionVector, rerollPointer) {
     let index = 0
-    let pathtree = {}
-    let initialScan = (decision, pointer) => {
+    const pathtree = {}
+    const initialScan = (decision, pointer) => {
       pathtree[pointer] = decisionVector[index++]
       return pathtree[pointer]
     }

@@ -2,7 +2,7 @@ const uuid = require('uuid/v4')
 const matchesIs = require('../util/matchesIs')
 
 class Storage {
-  constructor(grammar) {
+  constructor (grammar) {
     this.defs = grammar
     for (const def of grammar) {
       def.id = uuid()

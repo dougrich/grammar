@@ -25,7 +25,7 @@ describe('plugins/value', () => {
       ]
     ]
   )
-  
+
   parsePartial(
     plugin,
     [

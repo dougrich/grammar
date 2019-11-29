@@ -17,7 +17,7 @@ describe('plugins/has', () => {
       ]
     ]
   )
-  
+
   parsePartial(
     plugin,
     [
