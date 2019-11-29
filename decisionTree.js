@@ -86,9 +86,69 @@ class DecisionTree {
     }
   }
 
+  evaluateNumber (inputs, eq, context, pointer, adjustment, makeDecision) {
+    const inputSet = {}
+    for (const arg in inputs) {
+      if (inputs[arg].lookup) {
+        const abspath = path.resolve(pointer, adjustment, inputs[arg].lookup)
+        inputSet[arg] = JSONPointer.get(context, abspath)
+      }
+    }
+    let count = 0
+    const decider = (decision) => {
+      return makeDecision(decision, pointer + '/' + (count++), context)
+    }
+
+    return evaluate(eq, decider, inputSet)
+  }
+
+  evaluateNode (decisionContainer, context, decisionQueue, makeDecision) {
+    const { decision, pointer } = decisionContainer
+
+    if (decision.repeat) {
+      const { count, instance } = decision.repeat
+      const finalCount = this.evaluateNumber(count.inputs, count.eq, context, pointer + '/count', '..', makeDecision)
+      const value = new Array(finalCount)
+      for (let i = 0; i < finalCount; i++) {
+        decisionQueue.push({
+          decision: instance,
+          pointer: pointer + '/' + i
+        })
+      }
+      return value
+    } else if (decision.children) {
+      const value = {}
+      const keys = Object.keys(decision.children)
+      keys.sort()
+      for (const c of keys) {
+        decisionQueue.push({
+          decision: decision.children[c],
+          pointer: pointer + '/' + c
+        })
+      }
+      return value
+    } else if (decision.options) {
+      const choice = makeDecision(decision, pointer, context)
+      const next = decision.options[choice]
+      decisionQueue.push({ decision: next, pointer })
+      return undefined
+    } else if (decision.number) {
+      const { inputs, eq } = decision.number
+      return this.evaluateNumber(inputs, eq, context, pointer, '', makeDecision)
+    } else if (decision.value) {
+      return decision.value
+    }
+  }
+
   evaluateTree (tree, makeDecision, decisionVector = []) {
     const context = {
-      decisionVector
+      decisionVector,
+      result: {}
+    }
+    const loggedMakeDecision = (decision, pointer, context) => {
+      const result = makeDecision(decision, pointer, context)
+      decisionVector.push(result)
+      return result
     }
     const decisionQueue = [{ decision: tree, pointer: '/result' }]
     const postOps = []
@@ -100,7 +160,6 @@ class DecisionTree {
     while (decisionQueue.length) {
       const decisionContainer = decisionQueue.shift()
       const { decision, pointer } = decisionContainer
-      let value = null
       if (decision.dependsOn) {
         const unfufilled = []
         for (const relative of decision.dependsOn) {
@@ -118,42 +177,7 @@ class DecisionTree {
         // we still have unfufilled dependencies
         if (unfufilled.length) { continue }
       }
-
-      if (decision.children) {
-        value = {}
-        const keys = Object.keys(decision.children)
-        keys.sort()
-        for (const c of keys) {
-          decisionQueue.push({
-            decision: decision.children[c],
-            pointer: pointer + '/' + c
-          })
-        }
-      } else if (decision.options) {
-        const choice = makeDecision(decision, pointer, context)
-        decisionVector.push(choice)
-        const next = decision.options[choice]
-        decisionQueue.push({ decision: next, pointer })
-      } else if (decision.number) {
-        const { inputs, eq } = decision.number
-        const inputSet = {}
-        for (const arg in inputs) {
-          if (inputs[arg].lookup) {
-            const abspath = path.resolve(pointer, inputs[arg].lookup)
-            inputSet[arg] = JSONPointer.get(context, abspath)
-          }
-        }
-        const decider = (decision) => {
-          const choice = makeDecision(decision, pointer, context)
-          decisionVector.push(choice)
-          return choice
-        }
-
-        value = evaluate(eq, decider, inputSet)
-      } else if (decision.value) {
-        value = decision.value
-      }
-
+      const value = this.evaluateNode(decisionContainer, context, decisionQueue, loggedMakeDecision)
       JSONPointer.set(context, pointer, value)
       visited[pointer] = true
 

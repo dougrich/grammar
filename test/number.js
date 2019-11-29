@@ -26,6 +26,14 @@ describe('number', () => {
       0,
       { str: 2 },
       8
+    ],
+    [
+      'simple constant',
+      '6',
+      6,
+      0,
+      {},
+      6
     ]
   ]
 

@@ -287,6 +287,130 @@ describe('DecisionTree', () => {
           droll: 3
         }
       }
+    ],
+    [
+      'absolute someOf decision',
+      {
+        repeat: {
+          count: { eq: 2 },
+          instance: {
+            distribution: {
+              weights: [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            options: [
+              { value: 'test 0' },
+              { value: 'test 1' },
+              { value: 'test 2' },
+              { value: 'test 3' },
+              { value: 'test 4' },
+              { value: 'test 5' }
+            ]
+          }
+        }
+      },
+      [0, 0.999],
+      {
+        decisionVector: [0, 5],
+        result: [
+          'test 0',
+          'test 5'
+        ]
+      }
+    ],
+    [
+      'dynamic someOf decision',
+      {
+        repeat: {
+          count: { eq: { op: 'd', args: [1, 4] } },
+          instance: {
+            distribution: {
+              weights: [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            options: [
+              { value: 'test 0' },
+              { value: 'test 1' },
+              { value: 'test 2' },
+              { value: 'test 3' },
+              { value: 'test 4' },
+              { value: 'test 5' }
+            ]
+          }
+        }
+      },
+      [0.999, 0, 0, 0, 0],
+      {
+        decisionVector: [3, 0, 0, 0, 0],
+        result: [
+          'test 0',
+          'test 0',
+          'test 0',
+          'test 0'
+        ]
+      }
+    ],
+    [
+      'referenced someOf decision',
+      {
+        children: {
+          count: {
+            number: {
+              eq: { args: [1, 4], op: 'd' }
+            }
+          },
+          list: {
+            repeat: {
+              count: { eq: { arg: 'str' }, inputs: { str: { lookup: '../count' } } },
+              instance: {
+                distribution: {
+                  weights: [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                options: [
+                  { value: 'test 0' },
+                  { value: 'test 1' },
+                  { value: 'test 2' },
+                  { value: 'test 3' },
+                  { value: 'test 4' },
+                  { value: 'test 5' }
+                ]
+              }
+            }
+          }
+        }
+      },
+      [0.999, 0, 0, 0, 0],
+      {
+        decisionVector: [3, 0, 0, 0, 0],
+        result: {
+          count: 4,
+          list: [
+            'test 0',
+            'test 0',
+            'test 0',
+            'test 0'
+          ]
+        }
+      }
     ]
   ]
 
