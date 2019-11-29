@@ -238,5 +238,17 @@ describe('Parser#parsePartial', () => {
         expect(await generator.parse(input)).to.eql(output)
       })
     })
+
+    it('terminates on a recursive definition with an error', async () => {
+      const grammar = [
+        {
+          is: 'recursive',
+          has: 'recursive'
+        }
+      ]
+
+      const generator = new Parser({ storage: new Storage(grammar) })
+      await expect(generator.parse('recursive')).to.eventually.be.rejected()
+    })
   })
 })

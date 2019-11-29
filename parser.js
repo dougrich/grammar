@@ -53,6 +53,7 @@ class Parser {
 
   async parse (typename) {
     const root = await this.parsePartial(typename)
+    const cache = { [typename]: root }
     const stepQueue = [root]
     while (stepQueue.length) {
       const next = stepQueue.shift()
@@ -65,8 +66,11 @@ class Parser {
               throw new Error('Missing reference: ' + reference)
             }
             reference = this.parseLeaf(def)
+          } else if (reference.is && cache[reference.is]) {
+            reference = cache[reference.is]
           } else if (reference.is) {
             reference = await this.parsePartial(reference.is)
+            cache[reference.is] = reference
           } else {
             reference = this.parseLeaf(reference)
           }
@@ -76,6 +80,13 @@ class Parser {
         delete next.$ref
       }
     }
+
+    try {
+      JSON.stringify(root)
+    } catch (err) {
+      throw new Error('Types include self-references, which aren\'t valid')
+    }
+
     return root
   }
 }

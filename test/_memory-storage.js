@@ -14,7 +14,7 @@ class Storage {
     for (const def of this.defs) {
       if (matchesIs(names, def.is)) c++
     }
-    return c
+    return Promise.resolve(c)
   }
 
   async loadDefIds (names, offset = 0, count = Infinity) {
@@ -25,18 +25,18 @@ class Storage {
       if (c >= offset) {
         set.push(def.id)
         if (set.length >= count) {
-          return set
+          return Promise.resolve(set)
         }
       }
       c++
     }
-    return set
+    return Promise.resolve(set)
   }
 
   async loadDef (id) {
     for (const d of this.defs) {
       if (d.id === id) {
-        return d
+        return Promise.resolve(d)
       }
     }
   }
