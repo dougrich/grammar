@@ -105,21 +105,6 @@ const ContextualDecision = (color) => {
   })
 }
 
-const NumericDecision = {
-  children: {
-    str: { value: 1 },
-    droll: {
-      dependsOn: ['../str'],
-      number: {
-        inputs: {
-          str: { lookup: '../str' }
-        },
-        eq: { args: [{ args: [1, 6], op: 'd' }, { arg: 'str' }], op: '+' }
-      }
-    }
-  }
-}
-
 describe('DecisionTree', () => {
   const scenarios = [
     [
@@ -261,13 +246,45 @@ describe('DecisionTree', () => {
     ],
     [
       'Numeric Decision',
-      NumericDecision,
+      {
+        children: {
+          str: { value: 1 },
+          droll: {
+            dependsOn: ['../str'],
+            number: {
+              inputs: {
+                str: { lookup: '../str' }
+              },
+              eq: { args: [{ args: [1, 6], op: 'd' }, { arg: 'str' }], op: '+' }
+            }
+          }
+        }
+      },
       [0],
       {
         decisionVector: [0],
         result: {
           str: 1,
           droll: 2
+        }
+      }
+    ],
+    [
+      'Numeric Decision',
+      {
+        children: {
+          droll: {
+            number: {
+              eq: { args: [{ args: [1, 6], op: 'd' }, 2], op: '+' }
+            }
+          }
+        }
+      },
+      [0],
+      {
+        decisionVector: [0],
+        result: {
+          droll: 3
         }
       }
     ]

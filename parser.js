@@ -5,7 +5,8 @@ const systemPlugins = [
   require('./plugins/oneOf'),
   require('./plugins/value'),
   require('./plugins/switch'),
-  require('./plugins/matrix')
+  require('./plugins/matrix'),
+  require('./plugins/number')
 ]
 
 class Parser {

@@ -1,9 +1,9 @@
 const { expect } = require('./_chai')
 const Storage = require('./_memory-storage')
 
-const { generate } = require('../')
+const { generate } = require('..')
 
-describe('Realistic NPC scenario + templates', () => {
+describe('scenario/npc', () => {
   const grammar = [
     {
       is: ['given-name/human'],
