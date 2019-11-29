@@ -7,7 +7,8 @@ function matchesIs (is, type) {
   for (let i = 0; i < is.length; i++) {
     let matches = false
     for (let j = 0; j < type.length; j++) {
-      if (type[j].indexOf(is[i]) === 0) {
+      const regx = new RegExp(`^${is[i]}(/.+)?$`)
+      if (regx.test(type[j])) {
         // they match
         matches = true
         break
