@@ -1,3 +1,5 @@
+const toWeightedOptions = require('./dice')
+
 // in ascending order of precedence
 const operators = [
   {
@@ -8,9 +10,6 @@ const operators = [
   },
   {
     match: (lookahead) => /^d/.exec(lookahead)
-  },
-  {
-    match: (lookahead) => /^c/.exec(lookahead)
   }
 ]
 
@@ -99,30 +98,20 @@ function parse(phrase) {
 const ops = {
   '+': ([a, b]) => a + b,
   '-': ([a, b]) => a - b,
-  'd': ([a, b], random) => {
-    let sum = 0
-    for (let i = 0; i < a; i++) {
-      sum += Math.round(random(1, b))
-    }
-    return sum
-  },
-  'c': ([a, b], random) => {
-    let sum = 0
-    for (let i = 0; i < a; i++) {
-      sum += random(1, b)
-    }
-    return sum
+  'd': ([a, b], decider) => {
+    const options = toWeightedOptions(a, b)
+    return decider({ distribution: { weights: options } }) + a
   }
 }
 
-function evaluate(sequence, random, rootargs) {
+function evaluate(sequence, decider, rootargs) {
   if (typeof sequence !== 'object') {
     return sequence
   } else if (sequence.arg) {
     return rootargs[sequence.arg]
   } else if (sequence.op) {
-    const args = sequence.args.map(term => evaluate(term, random, rootargs))
-    return ops[sequence.op](args, random)
+    const args = sequence.args.map(term => evaluate(term, decider, rootargs))
+    return ops[sequence.op](args, decider)
   } else {
     throw new Error('wtf')
   }

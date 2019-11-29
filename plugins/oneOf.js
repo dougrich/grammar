@@ -21,7 +21,7 @@ function parsePartial (s) {
 
   for (let i = 0; i < oneOf.length; i++) {
     let option = oneOf[i]
-    weights[i] = { absolute: option.weight || 1 }
+    weights[i] = option.weight || 1
     if (typeof option !== 'object') {
       option = { is: option }
     }

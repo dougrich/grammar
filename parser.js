@@ -33,7 +33,7 @@ class Parser {
       for (let i = 0; i < count; i++) {
         const [id] = await this.storage.loadDefIds(typename, i, 1)
         $ref['/options/' + i] = id
-        weights[i] = { absolute: 1 }
+        weights[i] = 1
       }
       return {
         distribution: {

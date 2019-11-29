@@ -31,17 +31,17 @@ describe('number', () => {
 
   describe('#parse', () => {
     scenarios.forEach(([name, inputPhrase, parsed]) => {
-      it.only(name, () => {
+      it(name, () => {
         expect(parse(inputPhrase)).to.eql(parsed)
       })
     })
   })
 
   describe('#evalute', () => {
-    scenarios.forEach(([name, _, parsed, randomV, args, result]) => {
-      it.only(name, () => {
-        const random = (min, max) => randomV * (max - min) + min
-        expect(evaluate(parsed, random, args)).to.eql(result)
+    scenarios.forEach(([name, _, parsed, decision, args, result]) => {
+      it(name, () => {
+        const decider = () => decision
+        expect(evaluate(parsed, decider, args)).to.eql(result)
       })
     })
   })

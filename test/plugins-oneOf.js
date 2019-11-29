@@ -32,8 +32,8 @@ describe('plugins/oneOf', () => {
         {
           distribution: {
             weights: [
-              { absolute: 1 },
-              { absolute: 1 }
+              1,
+              1
             ]
           },
           options: [
@@ -52,8 +52,8 @@ describe('plugins/oneOf', () => {
         {
           distribution: {
             weights: [
-              { absolute: 1 },
-              { absolute: 1 }
+              1,
+              1
             ]
           },
           options: [
@@ -72,8 +72,8 @@ describe('plugins/oneOf', () => {
         {
           distribution: {
             weights: [
-              { absolute: 4 },
-              { absolute: 5 }
+              4,
+              5
             ]
           },
           options: [

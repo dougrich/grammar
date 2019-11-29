@@ -1,5 +1,7 @@
 const JSONPointer = require('json-pointer')
 const path = require('path')
+const weightedChoice = require('./weightedChoice')
+const { evaluate } = require('./number')
 
 /**
  * Supported Types:
@@ -44,28 +46,17 @@ class DecisionTree {
     }
   }
 
-  weightedChoice(weights) {
-    let sum = 0
-    for (let i = 0; i < weights.length; i++) {
-      sum += weights[i]
-    }
-    let which = this.random() * sum
-    let i = 0
-    while (i < weights.length) {
-      if (which < weights[i]) {
-        break
-      } else {
-        which -= weights[i]
-      }
-      i++
-    }
-    return Math.min(weights.length - 1, i)
-  }
-
   evaluateDistribution(distribution, pointer, context) {
     if (distribution.weights) {
-      const weights = distribution.weights.map(x => x.absolute)
-      return this.weightedChoice(weights)
+      const weights = distribution.weights.map(x => {
+        if (typeof x === 'number') {
+          return x
+        } else if (x.absolute != null) {
+          return x.absolute
+        }
+        throw new Error('Unrecognized weight')
+      })
+      return weightedChoice(weights, this.random())
     } else if (distribution.matrix) {
       const { inputs, values } = distribution.matrix
       const weights = inputs
@@ -91,7 +82,7 @@ class DecisionTree {
           }
           return sum
         })
-      return this.weightedChoice(weights)
+      return weightedChoice(weights, this.random())
     }
   }
 
@@ -128,6 +119,7 @@ class DecisionTree {
         if (unfufilled.length)
           continue
       }
+      
       if (decision.children) {
         value = {}
         const keys = Object.keys(decision.children)
@@ -143,6 +135,22 @@ class DecisionTree {
         decisionVector.push(choice)
         const next = decision.options[choice]
         decisionQueue.push({ decision: next, pointer })
+      } else if (decision.number) {
+        const { inputs, eq } = decision.number
+        const inputSet = {}
+        for (const arg in inputs) {
+          if (inputs[arg].lookup) {
+            const abspath = path.resolve(pointer, inputs[arg].lookup)
+            inputSet[arg] = JSONPointer.get(context, abspath)
+          }
+        }
+        const decider = (decision) => {
+          const choice = makeDecision(decision, pointer, context)
+          decisionVector.push(choice)
+          return choice
+        }
+
+        value = evaluate(eq, decider, inputSet)
       } else if (decision.value) {
         value = decision.value
       }

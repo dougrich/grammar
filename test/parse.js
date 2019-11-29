@@ -49,8 +49,8 @@ describe('Parser#parsePartial', () => {
         {
           distribution: {
             weights: [
-              { absolute: 1 },
-              { absolute: 1 }
+              1,
+              1
             ]
           },
           options: [
@@ -98,8 +98,8 @@ describe('Parser#parsePartial', () => {
         {
           distribution: {
             weights: [
-              { absolute: 1 },
-              { absolute: 1 }
+              1,
+              1
             ]
           },
           options: [
@@ -145,8 +145,8 @@ describe('Parser#parsePartial', () => {
         {
           distribution: {
             weights: [
-              { absolute: 1 },
-              { absolute: 1 }
+              1,
+              1
             ]
           },
           options: [
@@ -163,8 +163,8 @@ describe('Parser#parsePartial', () => {
             name: {
               distribution: {
                 weights: [
-                  { absolute: 1 },
-                  { absolute: 1 }
+                  1,
+                  1
                 ]
               },
               options: [
@@ -183,8 +183,8 @@ describe('Parser#parsePartial', () => {
             obj: {
               distribution: {
                 weights: [
-                  { absolute: 1 },
-                  { absolute: 1 }
+                  1,
+                  1
                 ]
               },
               options: [
@@ -193,8 +193,8 @@ describe('Parser#parsePartial', () => {
                     name: {
                       distribution: {
                         weights: [
-                          { absolute: 1 },
-                          { absolute: 1 }
+                          1,
+                          1
                         ]
                       },
                       options: [

@@ -4,8 +4,8 @@ const DecisionTree = require('../decisionTree')
 const EasyDecision = {
   distribution: {
     weights: [
-      { absolute: 1 },
-      { absolute: 1 }
+      1,
+      1
     ]
   },
   options: [
@@ -43,8 +43,8 @@ const BranchingDecision = {
 const NestedEasyDecision = {
   distribution: {
     weights: [
-      { absolute: 1 },
-      { absolute: 1 }
+      1,
+      1
     ]
   },
   options: [
@@ -103,6 +103,21 @@ const ContextualDecision = (color) => {
       }
     }
   })
+}
+
+const NumericDecision = {
+  children: {
+    str: { value: 1 },
+    droll: {
+      dependsOn: ['../str'],
+      number: {
+        inputs: {
+          str: { lookup: '../str' }
+        },
+        eq: { args: [{ args: [1, 6], op: 'd' }, { arg: 'str' }], op: '+' },
+      }
+    }
+  }
 }
 
 describe('DecisionTree', () => {
@@ -242,6 +257,18 @@ describe('DecisionTree', () => {
         result: {
           color: 'purple',
           auxilary: 'black'
+        }
+      }
+    ],
+    [
+      'Numeric Decision',
+      NumericDecision,
+      [0],
+      {
+        decisionVector: [0],
+        result: {
+          str: 1,
+          droll: 2
         }
       }
     ]
