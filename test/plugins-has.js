@@ -70,6 +70,22 @@ describe('plugins/has', () => {
             ' with it'
           ]
         }
+      ],
+      [
+        'object',
+        {
+          has: {
+            test: 'name/testcase'
+          }
+        },
+        {
+          children: {
+            test: null
+          },
+          $ref: {
+            '/children/test': { is: 'name/testcase' }
+          }
+        }
       ]
     ]
   )

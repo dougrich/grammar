@@ -6,7 +6,21 @@ function canParse (s) {
 }
 
 function parsePartial (s) {
-  const has = arrayify(s.has)
+  let has = s.has
+  if (typeof has === 'object' && !Array.isArray(has)) {
+    const arrayed = []
+    for (const k in has) {
+      const leaf = has[k]
+      if (typeof leaf === 'object') {
+        arrayed.push(Object.assign({ field: k }, leaf))
+      } else {
+        arrayed.push({ field: k, is: leaf })
+      }
+    }
+    has = arrayed
+  } else {
+    has = arrayify(has)
+  }
   const children = {}
   const $ref = {}
   for (let i = 0; i < has.length; i++) {
