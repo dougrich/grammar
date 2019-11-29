@@ -26,13 +26,33 @@ describe('scenario/goblins', () => {
         { value: 'a teetering stone ruin perched on a cliff' },
         { value: 'a warren filled with stolen silk undergarments and filth' }
       ]
+    },
+    {
+      is: 'guard/goblin',
+      has: {
+        name: { value: 'Thomas' }
+      }
+    },
+    {
+      is: 'guard/goblin',
+      has: {
+        name: { value: 'Peter' }
+      }
+    },
+    {
+      is: 'guard-detail/goblin',
+      someOf: {
+        count: '1d4',
+        each: 'guard'
+      }
     }
   ]
 
   const storage = new Storage(grammar);
 
   [
-    ['minimal', 'outpost/goblin', 0, '3 goblins lead by a daring goblin boss, based out of a teetering stone ruin perched on a cliff']
+    ['minimal', 'outpost/goblin', 0, '3 goblins lead by a daring goblin boss, based out of a teetering stone ruin perched on a cliff'],
+    ['someof', 'guard-detail', 0, [{ name: 'Thomas' }]]
   ].forEach(([scenario, type, randomV, expected]) => {
     it(scenario, async () => {
       const random = () => randomV

@@ -6,7 +6,8 @@ const systemPlugins = [
   require('./plugins/value'),
   require('./plugins/switch'),
   require('./plugins/matrix'),
-  require('./plugins/number')
+  require('./plugins/number'),
+  require('./plugins/someOf')
 ]
 
 class Parser {
@@ -60,6 +61,9 @@ class Parser {
           let reference = next.$ref[key]
           if (typeof reference === 'string') {
             const def = await this.storage.loadDef(reference)
+            if (!def) {
+              throw new Error('Missing reference: ' + reference)
+            }
             reference = this.parseLeaf(def)
           } else if (reference.is) {
             reference = await this.parsePartial(reference.is)
