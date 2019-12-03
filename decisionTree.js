@@ -38,7 +38,18 @@ class DecisionTree {
         if (typeof templatePart === 'string') {
           final += templatePart
         } else if (templatePart.lookup) {
-          const result = JSONPointer.get(value, templatePart.lookup)
+          let result = templatePart.lookup === '/'
+            ? value
+            : JSONPointer.get(value, templatePart.lookup)
+          if (templatePart.each) {
+            let partial = ''
+            for (const v of result) {
+              const tempcontext = {}
+              this.applyTemplate(templatePart.each, v, '/result', tempcontext)()
+              partial += tempcontext.result
+            }
+            result = partial
+          }
           final += result
         }
       }

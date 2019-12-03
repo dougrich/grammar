@@ -458,4 +458,38 @@ describe('DecisionTree', () => {
       })
     })
   })
+
+  describe('#applyTemplate', () => {
+    [
+      [
+        'simple no sub',
+        ['getting templated'],
+        {},
+        '/test',
+        { test: 'getting templated' }
+      ],
+      [
+        'simple with sub',
+        ['getting templated and ', { lookup: '/subbed' }],
+        { subbed: 'substituted' },
+        '/test',
+        { test: 'getting templated and substituted' }
+      ],
+      [
+        'simple with each',
+        ['getting templated and ', { lookup: '/subbed', each: ['repeat ', { lookup: '/' }, ' '] }],
+        { subbed: [0, 1, 2] },
+        '/test',
+        { test: 'getting templated and repeat 0 repeat 1 repeat 2 ' }
+      ]
+    ].forEach(([name, template, value, pointer, output]) => {
+      it(name, () => {
+        const random = () => Math.random()
+        const context = {}
+        const engine = new DecisionTree({ random })
+        engine.applyTemplate(template, value, pointer, context)()
+        expect(context).to.eql(output)
+      })
+    })
+  })
 })
