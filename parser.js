@@ -48,6 +48,8 @@ class Parser {
       const [id] = await this.storage.loadDefIds(typename, 0, 1)
       const def = await this.storage.loadDef(id)
       return this.parseLeaf(def)
+    } else if (count === 0) {
+      throw new Error('Missing "is" reference: ' + typename)
     }
   }
 
@@ -62,9 +64,6 @@ class Parser {
           let reference = next.$ref[key]
           if (typeof reference === 'string') {
             const def = await this.storage.loadDef(reference)
-            if (!def) {
-              throw new Error('Missing reference: ' + reference)
-            }
             reference = this.parseLeaf(def)
           } else if (reference.is && cache[reference.is]) {
             reference = cache[reference.is]

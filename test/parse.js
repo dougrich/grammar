@@ -250,5 +250,10 @@ describe('Parser#parsePartial', () => {
       const generator = new Parser({ storage: new Storage(grammar) })
       await expect(generator.parse('recursive')).to.eventually.be.rejected()
     })
+
+    it('throws an error when missing an is reference', async () => {
+      const generator = new Parser({ storage: new Storage(grammar) })
+      await expect(generator.parse('unreferenced')).to.eventually.be.rejectedWith('Missing "is" reference: unreferenced')
+    })
   })
 })
