@@ -411,6 +411,34 @@ describe('DecisionTree', () => {
           ]
         }
       }
+    ],
+    [
+      'multiple nested templates with out of order execution',
+      {
+        children: {
+          left: {
+            children: {
+              example: { value: 'a' }
+            },
+            $template: [{ lookup: '/example' }]
+          },
+          right: {
+            children: {
+              example: { value: 'a' }
+            },
+            $template: [{ lookup: '/example' }]
+          }
+        },
+        $template: [
+          { lookup: '/left' },
+          { lookup: '/right' }
+        ]
+      },
+      [],
+      {
+        decisionVector: [],
+        result: 'aa'
+      }
     ]
   ]
 
@@ -465,30 +493,25 @@ describe('DecisionTree', () => {
         'simple no sub',
         ['getting templated'],
         {},
-        '/test',
-        { test: 'getting templated' }
+        'getting templated'
       ],
       [
         'simple with sub',
         ['getting templated and ', { lookup: '/subbed' }],
         { subbed: 'substituted' },
-        '/test',
-        { test: 'getting templated and substituted' }
+        'getting templated and substituted'
       ],
       [
         'simple with each',
         ['getting templated and ', { lookup: '/subbed', each: ['repeat ', { lookup: '/' }, ' '] }],
         { subbed: [0, 1, 2] },
-        '/test',
-        { test: 'getting templated and repeat 0 repeat 1 repeat 2 ' }
+        'getting templated and repeat 0 repeat 1 repeat 2 '
       ]
-    ].forEach(([name, template, value, pointer, output]) => {
+    ].forEach(([name, template, value, output]) => {
       it(name, () => {
         const random = () => Math.random()
-        const context = {}
         const engine = new DecisionTree({ random })
-        engine.applyTemplate(template, value, pointer, context)()
-        expect(context).to.eql(output)
+        expect(engine.applyTemplate(template, value)).to.eql(output)
       })
     })
   })

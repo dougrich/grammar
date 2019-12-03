@@ -31,30 +31,26 @@ class DecisionTree {
     this.debug = opts.debug || (msg => console.debug(msg))
   }
 
-  applyTemplate (template, value, pointer, context) {
-    return () => {
-      let final = ''
-      for (const templatePart of template) {
-        if (typeof templatePart === 'string') {
-          final += templatePart
-        } else if (templatePart.lookup) {
-          let result = templatePart.lookup === '/'
-            ? value
-            : JSONPointer.get(value, templatePart.lookup)
-          if (templatePart.each) {
-            let partial = ''
-            for (const v of result) {
-              const tempcontext = {}
-              this.applyTemplate(templatePart.each, v, '/result', tempcontext)()
-              partial += tempcontext.result
-            }
-            result = partial
+  applyTemplate (template, value) {
+    let final = ''
+    for (const templatePart of template) {
+      if (typeof templatePart === 'string') {
+        final += templatePart
+      } else if (templatePart.lookup) {
+        let result = templatePart.lookup === '/'
+          ? value
+          : JSONPointer.get(value, templatePart.lookup)
+        if (templatePart.each) {
+          let partial = ''
+          for (const v of result) {
+            partial += this.applyTemplate(templatePart.each, v)
           }
-          final += result
+          result = partial
         }
+        final += result
       }
-      JSONPointer.set(context, pointer, final)
     }
+    return final
   }
 
   evaluateDistribution (distribution, pointer, context) {
@@ -201,15 +197,16 @@ class DecisionTree {
 
       if (decision.$template) {
         // note that this is deferred as we haven't made child decisions yet
-        postOps.push(this.applyTemplate(decision.$template, value, pointer, context))
+        postOps.push([decision.$template, value, pointer, context])
       }
     }
 
     // this is important so that operations deeper in the tree are executed before operations earlier in the tree
     postOps.reverse()
 
-    for (const op of postOps) {
-      op()
+    for (const [template, value, pointer, context] of postOps) {
+      const finalized = this.applyTemplate(template, value)
+      JSONPointer.set(context, pointer, finalized)
     }
 
     return context
