@@ -5,10 +5,12 @@ function canParse (s) {
 }
 
 function parsePartial (s) {
-  const oneOf = arrayify(s.oneOf)
+  let oneOf = arrayify(s.oneOf)
   if (oneOf.length === 1) {
     if (typeof oneOf[0] !== 'object') {
       return { value: oneOf[0] }
+    } else if (oneOf[0].values) {
+      oneOf = oneOf[0].values.map(v => ({ value: v }))
     } else {
       return oneOf[0]
     }

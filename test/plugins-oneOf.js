@@ -85,6 +85,35 @@ describe('plugins/oneOf', () => {
             '/options/1': { value: 'b' }
           }
         }
+      ],
+      [
+        'easy value syntax',
+        {
+          oneOf: {
+            values: [
+              'a', 'b', 'c'
+            ]
+          }
+        },
+        {
+          distribution: {
+            weights: [
+              1,
+              1,
+              1
+            ]
+          },
+          options: [
+            null,
+            null,
+            null
+          ],
+          $ref: {
+            '/options/0': { value: 'a' },
+            '/options/1': { value: 'b' },
+            '/options/2': { value: 'c' }
+          }
+        }
       ]
     ]
   )

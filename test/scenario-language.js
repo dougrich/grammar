@@ -7,38 +7,44 @@ describe('scenario/language', () => {
   const grammar = [
     {
       is: 'consonant',
-      oneOf: [
-        { value: 't' },
-        { value: 'd' },
-        { value: 'k' },
-        { value: 'g' },
-        { value: 'th' },
-        { value: 'z' },
-        { value: 'n' },
-        { value: 'r' }
-      ]
+      oneOf: {
+        values: [
+          't',
+          'd',
+          'k',
+          'g',
+          'th',
+          'z',
+          'n',
+          'r'
+        ]
+      }
     },
     {
       is: 'vowel/short',
-      oneOf: [
-        { value: 'a' },
-        { value: 'e' },
-        { value: 'u' },
-        { value: 'i' },
-        { value: 'y' },
-        { value: 'ae' }
-      ]
+      oneOf: {
+        values: [
+          'a',
+          'e',
+          'u',
+          'i',
+          'y',
+          'ae'
+        ]
+      }
     },
     {
       is: 'vowel/long',
-      oneOf: [
-        { value: 'aa' },
-        { value: 'ee' },
-        { value: 'uu' },
-        { value: 'ii' },
-        { value: 'yy' },
-        { value: 'aee' }
-      ]
+      oneOf: {
+        values: [
+          'aa',
+          'ee',
+          'uu',
+          'ii',
+          'yy',
+          'aee'
+        ]
+      }
     },
     {
       is: 'syllable/prefix',
