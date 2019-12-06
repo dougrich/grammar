@@ -32,9 +32,9 @@ As someone who authors content for the grammar:
 - [ ] I want it broken up into multiple files for legibility
 - [ ] I want it to be easy to add or remove content from
 - [x] I want discrete fields (i.e. oneOf)
-- [ ] I want variable count of fields (i.e. someOf)
+- [x] I want variable count of fields (i.e. someOf)
 - [ ] I want continuous fields (i.e. hue between 56 and 70)
-- [ ] I want discrete numeric fields (i.e. 2d6)
+- [x] I want discrete numeric fields (i.e. 2d6)
 
 As someone who uses the grammar to generate content:
 - [x] I want to hit a button and get the entire tree
@@ -47,3 +47,5 @@ As someone who uses this as a library:
 - [x] I want to be able to use either a file system or a database as the underlying storage mechanism
 - [ ] I want to be able to plugin my own operations (think graph-expand) that utilize the grammar language
 - [x] I want it to be isolatend and parallelizable so that I can run multiple queries at once
+- [ ] I want to be able to switch to a fully compiled language for performance, both as an execution engine and as a overall binary
+- [ ] I want to be able to use references which are resolved just before execution without copying to minimize memory footprint and to enable external definitions to connect in
