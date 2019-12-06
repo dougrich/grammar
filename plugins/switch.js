@@ -5,6 +5,7 @@ function parsePartial (decision) {
   const optionCount = values.length
   values = values.filter(x => x !== '$default')
   const options = []
+  const $ref = {}
   const matrixInputs = []
   const matrixValues = []
   for (const v of values) {
@@ -12,7 +13,8 @@ function parsePartial (decision) {
     matrixRow.fill(0)
     matrixRow[options.length] = 1
     matrixInputs.push({ lookup: dependency, eq: v })
-    options.push(cases[dependency][v])
+    $ref['/options/' + options.length] = cases[dependency][v]
+    options.push(null)
     matrixValues.push(matrixRow)
   }
 
@@ -20,7 +22,8 @@ function parsePartial (decision) {
     const matrixRow = new Array(optionCount)
     matrixRow.fill(0)
     matrixInputs.push(0)
-    options.push(cases[dependency].$default)
+    $ref['/options/' + options.length] = cases[dependency].$default
+    options.push(null)
     matrixValues.push(matrixRow)
   }
 
@@ -32,7 +35,8 @@ function parsePartial (decision) {
       }
     },
     options,
-    dependsOn: [dependency]
+    dependsOn: [dependency],
+    $ref
   }
 }
 

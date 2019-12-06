@@ -56,11 +56,17 @@ describe('plugins/value', () => {
             }
           },
           options: [
-            { value: 'pink' },
-            { value: 'periwinkle' },
-            { value: 'lime' },
-            { value: 'black' }
-          ]
+            null,
+            null,
+            null,
+            null
+          ],
+          $ref: {
+            '/options/0': { value: 'pink' },
+            '/options/1': { value: 'periwinkle' },
+            '/options/2': { value: 'lime' },
+            '/options/3': { value: 'black' }
+          }
         }
       ]
     ]
