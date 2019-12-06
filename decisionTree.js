@@ -53,6 +53,14 @@ class DecisionTree {
     return final
   }
 
+  resolve (pointer, ...parts) {
+    let result = path.resolve(pointer, ...parts)
+    if (!result.startsWith('/result')) {
+      result = '/result' + result
+    }
+    return result
+  }
+
   evaluateDistribution (distribution, pointer, context) {
     if (distribution.weights) {
       const weights = distribution.weights.map(x => {
@@ -70,7 +78,7 @@ class DecisionTree {
         .map((input) => {
           if (typeof input !== 'object') return input
           const { lookup, eq } = input
-          const lookupPointer = path.resolve(pointer, lookup)
+          const lookupPointer = this.resolve(pointer, lookup)
           const lookupValue = JSONPointer.get(context, lookupPointer)
           if (eq) {
             if (lookupValue === eq) {
@@ -97,7 +105,7 @@ class DecisionTree {
     const inputSet = {}
     for (const arg in inputs) {
       if (inputs[arg].lookup) {
-        const abspath = path.resolve(pointer, adjustment, inputs[arg].lookup)
+        const abspath = this.resolve(pointer, adjustment, inputs[arg].lookup)
         inputSet[arg] = JSONPointer.get(context, abspath)
       }
     }
@@ -173,7 +181,7 @@ class DecisionTree {
       if (decision.dependsOn) {
         const unfufilled = []
         for (const relative of decision.dependsOn) {
-          const abspath = path.resolve(pointer, relative)
+          const abspath = this.resolve(pointer, relative)
           if (dependencies[abspath] && dependencies[abspath].includes(decisionContainer)) {
             const index = dependencies[abspath].indexOf(decisionContainer)
             dependencies[abspath].splice(index, 1)
