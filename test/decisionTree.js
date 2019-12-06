@@ -113,7 +113,8 @@ describe('DecisionTree', () => {
       [0],
       {
         decisionVector: [0],
-        result: 'test 0'
+        result: 'test 0',
+        steps: 2
       }
     ],
     [
@@ -125,7 +126,8 @@ describe('DecisionTree', () => {
         result: {
           testA: 'test 0',
           testB: 'test 1'
-        }
+        },
+        steps: 5
       }
     ],
     [
@@ -143,7 +145,8 @@ describe('DecisionTree', () => {
               testB: 'test 0'
             }
           }
-        }
+        },
+        steps: 11
       }
     ],
     [
@@ -173,7 +176,8 @@ describe('DecisionTree', () => {
               }
             }
           }
-        }
+        },
+        steps: 23
       }
     ],
     [
@@ -184,7 +188,8 @@ describe('DecisionTree', () => {
         decisionVector: [0, 0],
         result: {
           name: 'test 0'
-        }
+        },
+        steps: 4
       }
     ],
     [
@@ -193,7 +198,8 @@ describe('DecisionTree', () => {
       [0],
       {
         decisionVector: [0],
-        result: 'this is a test 0 decision'
+        result: 'this is a test 0 decision',
+        steps: 3
       }
     ],
     [
@@ -205,7 +211,8 @@ describe('DecisionTree', () => {
         result: {
           color: 'red',
           auxilary: 'pink'
-        }
+        },
+        steps: 5
       }
     ],
     [
@@ -217,7 +224,8 @@ describe('DecisionTree', () => {
         result: {
           color: 'blue',
           auxilary: 'periwinkle'
-        }
+        },
+        steps: 5
       }
     ],
     [
@@ -229,7 +237,8 @@ describe('DecisionTree', () => {
         result: {
           color: 'green',
           auxilary: 'lime'
-        }
+        },
+        steps: 5
       }
     ],
     [
@@ -241,7 +250,8 @@ describe('DecisionTree', () => {
         result: {
           color: 'purple',
           auxilary: 'black'
-        }
+        },
+        steps: 5
       }
     ],
     [
@@ -266,7 +276,8 @@ describe('DecisionTree', () => {
         result: {
           str: 1,
           droll: 2
-        }
+        },
+        steps: 4
       }
     ],
     [
@@ -285,7 +296,8 @@ describe('DecisionTree', () => {
         decisionVector: [0],
         result: {
           droll: 3
-        }
+        },
+        steps: 2
       }
     ],
     [
@@ -321,7 +333,8 @@ describe('DecisionTree', () => {
         result: [
           'test 0',
           'test 5'
-        ]
+        ],
+        steps: 5
       }
     ],
     [
@@ -359,7 +372,8 @@ describe('DecisionTree', () => {
           'test 0',
           'test 0',
           'test 0'
-        ]
+        ],
+        steps: 9
       }
     ],
     [
@@ -409,7 +423,8 @@ describe('DecisionTree', () => {
             'test 0',
             'test 0'
           ]
-        }
+        },
+        steps: 11
       }
     ],
     [
@@ -437,7 +452,8 @@ describe('DecisionTree', () => {
       [],
       {
         decisionVector: [],
-        result: 'aa'
+        result: 'aa',
+        steps: 5
       }
     ]
   ]
@@ -474,7 +490,8 @@ describe('DecisionTree', () => {
           decisionVector: [0, 1],
           result: {
             name: 'test 1'
-          }
+          },
+          steps: 4
         }
       ]
     ].forEach(([name, tree, decisionVector, rerollPath, randomVSequence, expected]) => {

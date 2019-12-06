@@ -164,7 +164,10 @@ class DecisionTree {
     // list of dependencies that need to be resolved
     const dependencies = {}
 
+    let steps = 0
+
     while (decisionQueue.length) {
+      steps++
       const decisionContainer = decisionQueue.shift()
       const { decision, pointer } = decisionContainer
       if (decision.dependsOn) {
@@ -208,6 +211,8 @@ class DecisionTree {
       const finalized = this.applyTemplate(template, value)
       JSONPointer.set(context, pointer, finalized)
     }
+
+    context.steps = steps
 
     return context
   }
