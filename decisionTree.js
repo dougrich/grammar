@@ -165,7 +165,7 @@ class DecisionTree {
       result: {}
     }
     const loggedEntropy = (pointer) => {
-      let result = entropy(pointer)
+      const result = entropy(pointer)
       decisionVector.push(result)
       return result
     }
@@ -251,7 +251,7 @@ class DecisionTree {
     index = 0
     const rerollDecider = (pointer) => {
       if (pointer.indexOf('/result' + rerollPointer) === 0) {
-        return  Math.floor(this.random() * 256)
+        return Math.floor(this.random() * 256)
       } else {
         return pathtree[pointer]
       }
