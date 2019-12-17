@@ -122,7 +122,7 @@ describe('DecisionTree', () => {
       NestedDecision,
       [0, 0.9999],
       {
-        decisionVector: [0, 1],
+        decisionVector: [0, 255],
         result: {
           testA: 'test 0',
           testB: 'test 1'
@@ -220,7 +220,7 @@ describe('DecisionTree', () => {
       ContextualDecision('blue'),
       [0],
       {
-        decisionVector: [1],
+        decisionVector: [0],
         result: {
           color: 'blue',
           auxilary: 'periwinkle'
@@ -233,7 +233,7 @@ describe('DecisionTree', () => {
       ContextualDecision('green'),
       [0],
       {
-        decisionVector: [2],
+        decisionVector: [0],
         result: {
           color: 'green',
           auxilary: 'lime'
@@ -246,7 +246,7 @@ describe('DecisionTree', () => {
       ContextualDecision('purple'),
       [0],
       {
-        decisionVector: [3],
+        decisionVector: [0],
         result: {
           color: 'purple',
           auxilary: 'black'
@@ -329,7 +329,7 @@ describe('DecisionTree', () => {
       },
       [0, 0.999],
       {
-        decisionVector: [0, 5],
+        decisionVector: [0, 255],
         result: [
           'test 0',
           'test 5'
@@ -366,7 +366,7 @@ describe('DecisionTree', () => {
       },
       [0.999, 0, 0, 0, 0],
       {
-        decisionVector: [3, 0, 0, 0, 0],
+        decisionVector: [255, 0, 0, 0, 0],
         result: [
           'test 0',
           'test 0',
@@ -414,7 +414,7 @@ describe('DecisionTree', () => {
       },
       [0.999, 0, 0, 0, 0],
       {
-        decisionVector: [3, 0, 0, 0, 0],
+        decisionVector: [255, 0, 0, 0, 0],
         result: {
           count: 4,
           list: [
@@ -487,7 +487,7 @@ describe('DecisionTree', () => {
         '/name',
         [0.999],
         {
-          decisionVector: [0, 1],
+          decisionVector: [0, 255],
           result: {
             name: 'test 1'
           },

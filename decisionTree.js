@@ -61,7 +61,8 @@ class DecisionTree {
     return result
   }
 
-  evaluateDistribution (distribution, pointer, context) {
+  evaluateDistribution (entropy, decision, pointer, context) {
+    const { distribution } = decision
     if (distribution.weights) {
       const weights = distribution.weights.map(x => {
         if (typeof x === 'number') {
@@ -71,7 +72,7 @@ class DecisionTree {
         }
         throw new Error('Unrecognized weight')
       })
-      return weightedChoice(weights, this.random())
+      return weightedChoice(weights, entropy(pointer) / 256)
     } else if (distribution.matrix) {
       const { inputs, values } = distribution.matrix
       const weights = inputs
@@ -97,11 +98,14 @@ class DecisionTree {
           }
           return sum
         })
-      return weightedChoice(weights, this.random())
+      return weightedChoice(weights, entropy(pointer) / 256)
+    } else {
+      console.log('WHY AM I HERE')
+      console.log(distribution)
     }
   }
 
-  evaluateNumber (inputs, eq, context, pointer, adjustment, makeDecision) {
+  evaluateNumber (inputs, eq, context, pointer, adjustment, entropy) {
     const inputSet = {}
     for (const arg in inputs) {
       if (inputs[arg].lookup) {
@@ -111,18 +115,18 @@ class DecisionTree {
     }
     let count = 0
     const decider = (decision) => {
-      return makeDecision(decision, pointer + '/' + (count++), context)
+      return this.evaluateDistribution(entropy, decision, pointer + '/' + (count++), context)
     }
 
     return evaluate(eq, decider, inputSet)
   }
 
-  evaluateNode (decisionContainer, context, decisionQueue, makeDecision) {
+  evaluateNode (decisionContainer, context, decisionQueue, entropy) {
     const { decision, pointer } = decisionContainer
 
     if (decision.repeat) {
       const { count, instance } = decision.repeat
-      const finalCount = this.evaluateNumber(count.inputs, count.eq, context, pointer + '/count', '..', makeDecision)
+      const finalCount = this.evaluateNumber(count.inputs, count.eq, context, pointer + '/count', '..', entropy)
       const value = new Array(finalCount)
       for (let i = 0; i < finalCount; i++) {
         decisionQueue.push({
@@ -143,25 +147,25 @@ class DecisionTree {
       }
       return value
     } else if (decision.options) {
-      const choice = makeDecision(decision, pointer, context)
+      const choice = this.evaluateDistribution(entropy, decision, pointer, context)
       const next = decision.options[choice]
       decisionQueue.push({ decision: next, pointer })
       return undefined
     } else if (decision.number) {
       const { inputs, eq } = decision.number
-      return this.evaluateNumber(inputs, eq, context, pointer, '', makeDecision)
+      return this.evaluateNumber(inputs, eq, context, pointer, '', entropy)
     } else if (decision.value) {
       return decision.value
     }
   }
 
-  evaluateTree (tree, makeDecision, decisionVector = []) {
+  evaluateTree (tree, entropy, decisionVector = []) {
     const context = {
       decisionVector,
       result: {}
     }
-    const loggedMakeDecision = (decision, pointer, context) => {
-      const result = makeDecision(decision, pointer, context)
+    const loggedEntropy = (pointer) => {
+      let result = entropy(pointer)
       decisionVector.push(result)
       return result
     }
@@ -195,7 +199,7 @@ class DecisionTree {
         // we still have unfufilled dependencies
         if (unfufilled.length) { continue }
       }
-      const value = this.evaluateNode(decisionContainer, context, decisionQueue, loggedMakeDecision)
+      const value = this.evaluateNode(decisionContainer, context, decisionQueue, loggedEntropy)
       JSONPointer.set(context, pointer, value)
       visited[pointer] = true
 
@@ -226,10 +230,7 @@ class DecisionTree {
   }
 
   collapse (tree) {
-    const collapseDecider = (decision, pointer, context) => {
-      return this.evaluateDistribution(decision.distribution, pointer, context)
-    }
-    return this.evaluateTree(tree, collapseDecider)
+    return this.evaluateTree(tree, () => Math.floor(this.random() * 256))
   }
 
   hydrate (tree, decisionVector) {
@@ -241,16 +242,16 @@ class DecisionTree {
   reroll (tree, decisionVector, rerollPointer) {
     let index = 0
     const pathtree = {}
-    const initialScan = (decision, pointer) => {
+    const initialScan = (pointer) => {
       pathtree[pointer] = decisionVector[index++]
       return pathtree[pointer]
     }
     // note that we don't care about the result - we're scanning the decisionVector onto the paths so we don't reroll adjacent rolls
     this.evaluateTree(tree, initialScan)
     index = 0
-    const rerollDecider = (decision, pointer, context) => {
+    const rerollDecider = (pointer) => {
       if (pointer.indexOf('/result' + rerollPointer) === 0) {
-        return this.evaluateDistribution(decision.distribution, pointer, context)
+        return  Math.floor(this.random() * 256)
       } else {
         return pathtree[pointer]
       }
